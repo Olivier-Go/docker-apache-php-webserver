@@ -1,0 +1,28 @@
+services:
+  php-fpm:
+    build:
+      context: .
+      dockerfile: php-fpm.dockerfile
+    volumes:
+      - ./public:/var/www/public
+    expose:
+      - 9000
+    networks:
+      - webserver
+  apache:
+    build:
+      context: .
+      dockerfile: apache.dockerfile
+    ports:
+      # host:container
+      - 8080:80
+    volumes:
+      - ./public:/var/www/public
+    depends_on:
+      - php-fpm
+    networks:
+      - webserver
+
+networks:
+  webserver:
+    driver: bridge
